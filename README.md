@@ -126,4 +126,3 @@ node server.js
 
 5️⃣ Open in Browser
 Frontend → http://localhost:3000
-
