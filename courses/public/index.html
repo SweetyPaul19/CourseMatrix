@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CourseMatrix</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="logo"><div class="brand">CourseMatrix</div></div>
+    <div class="nav">
+      <button class="nav-btn" onclick="location.href='courses.html'">Courses</button>
+      <button class="nav-btn" onclick="location.href='about.html'">About</button>
+      <button class="nav-btn" onclick="location.href='contact us.html'">Contact Us</button>
+      <!-- <button class="nav-btn" onclick="alert('Courses')">Courses</button> -->
+      <!-- <button class="nav-btn" onclick="alert('About')">About</button>
+      <button class="nav-btn" onclick="alert('Contact Us')">Contact Us</button> -->
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Welcome to <span class="highlight">CourseMatrix</span></h1>
+      <p>Your trusted platform for student course allotment and registration</p>
+      <div class="actions">
+        <button class="btn" id="show-registration">Student Registration</button>
+        <button class="btn" id="show-login">Student Login</button>
+        <button class="btn" id="select-courses-trigger" style="display:none;">Select Courses</button>
+        <button class="btn" onclick="location.href='admin.html'">Admin Panel</button>
+      </div>
+    </div>
+
+    <!-- dynamic auth UI will be injected here -->
+    <div id="auth-area" style="max-width: 920px; margin: 32px auto; padding:0 12px;"></div>
+  </div>
+
+  <div id="modal-root" style="display:none;"></div>
+
+  <script src="script.js"></script>
+
+  <div class="footer">
+    CourseMatrix — simple course selection interface
+  </div>
+</body>
+</html>

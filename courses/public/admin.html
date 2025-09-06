@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - CourseMatrix</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .department {
+      margin-bottom: 20px;
+    }
+    .department h3 {
+      margin-bottom: 5px;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    .courses {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .courses label {
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .course-checkbox input {
+      margin-right: 4px;
+    }
+
+    /* ADDED: Curriculum Overview styles (scoped, minimal) */
+    #curriculum-overview {
+      border: 1px solid #e6eef8;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(30,40,60,0.04);
+    }
+    #curriculum-overview h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.15em;
+    }
+    #curriculum-overview p { margin: 6px 0; }
+    #curriculum-overview ul { margin: 6px 0 0 18px; padding: 0; }
+    #curriculum-overview li { margin-bottom: 4px; }
+    /* end ADDED */
+
+    /* ADDED: Full Curriculum Accordion styles */
+    #curriculum-accordion-full {
+      margin-bottom: 18px;
+    }
+    #curriculum-accordion .dept-card {
+      border: 1px solid #e9eef6;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(20,30,50,0.03);
+    }
+    #curriculum-accordion .dept-header {
+      padding: 12px 14px;
+      background: #f5f8fb;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    #curriculum-accordion .dept-body {
+      display: none;
+      padding: 12px 14px;
+      background: #fff;
+    }
+    #curriculum-accordion .semester {
+      margin-bottom: 10px;
+    }
+    #curriculum-accordion .semester-header {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #2b3a55;
+    }
+    #curriculum-accordion .course-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 8px;
+    }
+    #curriculum-accordion .course-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #eef3fb;
+      background: #fafcff;
+    }
+    #curriculum-accordion .course-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+    /* small responsive fix */
+    @media (max-width: 640px) {
+      #curriculum-accordion .course-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* end ADDED */
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo"><div class="brand">CourseMatrix Admin</div></div>
+    <div class="nav">
+      <button class="nav-btn" onclick="location.href='index.html'">Home</button>
+    </div>
+  </div>
+
+  <div class="container" style="max-width:950px;">
+    <!-- Admin login -->
+    <div class="card" id="admin-login-card">
+      <h2>Admin Login</h2>
+      <div class="row">
+        <input id="admin-username" placeholder="Username" />
+        <input id="admin-password" placeholder="Password" type="password" />
+      </div>
+      <button class="small-btn" id="btn-admin-login">Login</button>
+      <div id="admin-login-msg" class="feedback"></div>
+    </div>
+
+    <!-- Allocation UI -->
+    <div class="card" id="admin-main-card" style="display:none;">
+      <h2>Allocate Courses to Students</h2>
+
+      <!-- ✅ Department selection -->
+      <div class="field">
+        <label for="dept-filter">Select Department</label>
+        <select id="dept-filter">
+          <option value="">-- Choose department --</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="ME">ME</option>
+          <option value="CE">CE</option>
+        </select>
+      </div>
+
+      <!-- ✅ Semester selection -->
+      <div class="field">
+        <label for="sem-filter">Select Semester</label>
+        <select id="sem-filter">
+          <option value="">-- Choose semester --</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <p style="margin:0;font-weight:600;">Students in Department & Semester</p>
+        <div id="student-list" style="max-height:260px;overflow:auto; padding:8px; border:1px solid #ddd; border-radius:6px;">
+          <!-- simple list: roll - name -->
+        </div>
+      </div>
+
+      <!-- ADDED: Full Curriculum Accordion (Department -> Semester -> Courses) -->
+      <div id="curriculum-accordion-full">
+        <h3 style="margin:0 0 10px 0;">Curriculum Overview</h3>
+        <div id="curriculum-accordion"></div>
+      </div>
+      <!-- end ADDED -->
+
+      <div class="field" style="display:none;">
+
+
+        <p style="margin:0;font-weight:600;">Courses to Allocate</p>
+        <div id="alloc-list">
+          <!-- ✅ Courses remain grouped by department 
+               Later you may refine this to be department + semester based -->
+          <div class="department" data-dept="CSE">
+            <h3>Computer Science & Engineering</h3>
+            <div class="courses">
+              <!-- 1st Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics I" /><span>Engineering Mathematics I (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Physics" /><span>Engineering Physics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Chemistry" /><span>Engineering Chemistry (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electrical Engineering" /><span>Basic Electrical Engineering (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Programming" /><span>Computer Programming (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mechanics" /><span>Engineering Mechanics (1st Sem)</span></label>
+
+<!-- 2nd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics II" /><span>Engineering Mathematics II (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Drawing" /><span>Engineering Drawing (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Data Structures" /><span>Data Structures (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Digital Logic Design" /><span>Digital Logic Design (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electronics" /><span>Basic Electronics (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Environmental Science" /><span>Environmental Science (2nd Sem)</span></label>
+
+<!-- 3rd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Discrete Mathematics" /><span>Discrete Mathematics (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Organization & Architecture" /><span>Computer Organization & Architecture (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Data Structures & Algorithms" /><span>Data Structures & Algorithms (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Object-Oriented Programming" /><span>Object-Oriented Programming (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Software Engineering" /><span>Software Engineering (3rd Sem)</span></label>
+
+<!-- 4th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Operating Systems" /><span>Operating Systems (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Database Management Systems" /><span>Database Management Systems (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Networks" /><span>Computer Networks (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Theory of Computation" /><span>Theory of Computation (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Software Lab" /><span>Software Lab (4th Sem)</span></label>
+
+<!-- 5th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Compiler Design" /><span>Compiler Design (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Artificial Intelligence" /><span>Artificial Intelligence (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Web Technologies" /><span>Web Technologies (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Graphics" /><span>Computer Graphics (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Database Lab" /><span>Database Lab (5th Sem)</span></label>
+
+<!-- 6th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Machine Learning" /><span>Machine Learning (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Cloud Computing" /><span>Cloud Computing (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Cybersecurity" /><span>Cybersecurity (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mobile App Development" /><span>Mobile App Development (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mini Project Lab" /><span>Mini Project Lab (6th Sem)</span></label>
+
+<!-- 7th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Data Mining & Warehousing" /><span>Data Mining & Warehousing (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Internet of Things (IoT)" /><span>Internet of Things (IoT) (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Elective I" /><span>Elective I (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work I" /><span>Project Work I (7th Sem)</span></label>
+
+<!-- 8th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Elective II" /><span>Elective II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work II" /><span>Project Work II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Seminar" /><span>Seminar (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Internship/Training" /><span>Internship/Training (8th Sem)</span></label>
+
+            </div>
+          </div>
+
+          <div class="department" data-dept="ECE">
+            <h3>Electronics & Communication Engineering</h3>
+            <div class="courses">
+              <!-- 1st Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics I" /><span>Engineering Mathematics I (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Physics" /><span>Engineering Physics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Chemistry" /><span>Engineering Chemistry (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electrical Engineering" /><span>Basic Electrical Engineering (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Programming" /><span>Computer Programming (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mechanics" /><span>Engineering Mechanics (1st Sem)</span></label>
+
+<!-- 2nd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics II" /><span>Engineering Mathematics II (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Drawing" /><span>Engineering Drawing (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Digital Logic Design" /><span>Digital Logic Design (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electronics" /><span>Basic Electronics (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Electronic Devices & Circuits" /><span>Electronic Devices & Circuits (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Environmental Science" /><span>Environmental Science (2nd Sem)</span></label>
+
+<!-- 3rd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Signals and Systems" /><span>Signals and Systems (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Analog Communication" /><span>Analog Communication (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Microprocessors & Microcontrollers" /><span>Microprocessors & Microcontrollers (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Electromagnetic Theory" /><span>Electromagnetic Theory (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Linear Integrated Circuits" /><span>Linear Integrated Circuits (3rd Sem)</span></label>
+
+<!-- 4th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Digital Communication" /><span>Digital Communication (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Control Systems" /><span>Control Systems (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Microcontroller Programming" /><span>Microcontroller Programming (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Analog VLSI Design" /><span>Analog VLSI Design (4th Sem)</span></label>
+
+<!-- 5th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Digital Signal Processing" /><span>Digital Signal Processing (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Wireless Communication" /><span>Wireless Communication (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Embedded Systems" /><span>Embedded Systems (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Communication Lab" /><span>Communication Lab (5th Sem)</span></label>
+
+<!-- 6th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="VLSI Design" /><span>VLSI Design (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Optical Communication" /><span>Optical Communication (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mobile Communication" /><span>Mobile Communication (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Advanced Microprocessors" /><span>Advanced Microprocessors (6th Sem)</span></label>
+
+<!-- 7th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Radar & Satellite Communication" /><span>Radar & Satellite Communication (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Elective I" /><span>Elective I (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work I" /><span>Project Work I (7th Sem)</span></label>
+
+<!-- 8th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Elective II" /><span>Elective II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work II" /><span>Project Work II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Seminar" /><span>Seminar (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Internship/Training" /><span>Internship/Training (8th Sem)</span></label>
+
+            </div>
+          </div>
+
+          <div class="department" data-dept="ME">
+            <h3>Mechanical Engineering</h3>
+            <div class="courses">
+              <!-- 1st Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics I" /><span>Engineering Mathematics I (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Physics" /><span>Engineering Physics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Chemistry" /><span>Engineering Chemistry (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mechanics" /><span>Engineering Mechanics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electrical Engineering" /><span>Basic Electrical Engineering (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Programming" /><span>Computer Programming (1st Sem)</span></label>
+
+<!-- 2nd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics II" /><span>Engineering Mathematics II (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Drawing" /><span>Engineering Drawing (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Materials" /><span>Engineering Materials (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Thermodynamics I" /><span>Thermodynamics I (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Mechanical Engineering" /><span>Basic Mechanical Engineering (2nd Sem)</span></label>
+
+<!-- 3rd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Strength of Materials" /><span>Strength of Materials (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Manufacturing Processes" /><span>Manufacturing Processes (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Fluid Mechanics I" /><span>Fluid Mechanics I (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Machine Drawing" /><span>Machine Drawing (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mechanical Measurements I" /><span>Mechanical Measurements I (3rd Sem)</span></label>
+
+<!-- 4th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Thermodynamics II" /><span>Thermodynamics II (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Theory of Machines" /><span>Theory of Machines (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Fluid Mechanics II" /><span>Fluid Mechanics II (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Dynamics of Machines" /><span>Dynamics of Machines (4th Sem)</span></label>
+
+<!-- 5th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Heat Transfer" /><span>Heat Transfer (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Design of Machine Elements I" /><span>Design of Machine Elements I (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="IC Engines" /><span>IC Engines (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mechanical Measurements II" /><span>Mechanical Measurements II (5th Sem)</span></label>
+
+<!-- 6th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Machine Design" /><span>Machine Design (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Refrigeration and Air Conditioning" /><span>Refrigeration and Air Conditioning (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Aided Design" /><span>Computer Aided Design (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Industrial Engineering" /><span>Industrial Engineering (6th Sem)</span></label>
+
+<!-- 7th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Operations Research" /><span>Operations Research (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Mechatronics" /><span>Mechatronics (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work I" /><span>Project Work I (7th Sem)</span></label>
+
+<!-- 8th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Project Work II" /><span>Project Work II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Seminar" /><span>Seminar (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Elective I" /><span>Elective I (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Elective II" /><span>Elective II (8th Sem)</span></label>
+
+            </div>
+          </div>
+
+          <div class="department" data-dept="CE">
+            <h3>Civil Engineering</h3>
+            <div class="courses">
+              <!-- 1st Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics I" /><span>Engineering Mathematics I (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Physics" /><span>Engineering Physics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Chemistry" /><span>Engineering Chemistry (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mechanics" /><span>Engineering Mechanics (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Electrical Engineering" /><span>Basic Electrical Engineering (1st Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Computer Programming" /><span>Computer Programming (1st Sem)</span></label>
+
+<!-- 2nd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Engineering Mathematics II" /><span>Engineering Mathematics II (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Drawing" /><span>Engineering Drawing (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Surveying I" /><span>Surveying I (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Engineering Materials" /><span>Engineering Materials (2nd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Basic Civil Engineering" /><span>Basic Civil Engineering (2nd Sem)</span></label>
+
+<!-- 3rd Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Strength of Materials" /><span>Strength of Materials (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Fluid Mechanics" /><span>Fluid Mechanics (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Surveying II" /><span>Surveying II (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Concrete Technology" /><span>Concrete Technology (3rd Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Structural Analysis I" /><span>Structural Analysis I (3rd Sem)</span></label>
+
+<!-- 4th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Geotechnical Engineering I" /><span>Geotechnical Engineering I (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Structural Analysis II" /><span>Structural Analysis II (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Transportation Engineering I" /><span>Transportation Engineering I (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Hydraulics" /><span>Hydraulics (4th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Environmental Engineering I" /><span>Environmental Engineering I (4th Sem)</span></label>
+
+<!-- 5th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Geotechnical Engineering II" /><span>Geotechnical Engineering II (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Design of Concrete Structures I" /><span>Design of Concrete Structures I (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Hydrology and Water Resources Engineering" /><span>Hydrology and Water Resources Engineering (5th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Transportation Engineering II" /><span>Transportation Engineering II (5th Sem)</span></label>
+
+<!-- 6th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Design of Concrete Structures II" /><span>Design of Concrete Structures II (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Design of Steel Structures" /><span>Design of Steel Structures (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Environmental Engineering II" /><span>Environmental Engineering II (6th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Construction Planning and Management" /><span>Construction Planning and Management (6th Sem)</span></label>
+
+<!-- 7th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Advanced Structural Design" /><span>Advanced Structural Design (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Hydraulic Structures" /><span>Hydraulic Structures (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Elective I" /><span>Elective I (7th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work I" /><span>Project Work I (7th Sem)</span></label>
+
+<!-- 8th Semester -->
+<label class="course-checkbox"><input type="checkbox" value="Elective II" /><span>Elective II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Project Work II" /><span>Project Work II (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Seminar" /><span>Seminar (8th Sem)</span></label>
+<label class="course-checkbox"><input type="checkbox" value="Internship/Training" /><span>Internship/Training (8th Sem)</span></label>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" id="btn-allocate">Allocate Courses</button>
+      <div id="alloc-msg" class="feedback"></div>
+      <div id="multi-info" style="margin-top:20px;"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Admin Panel — CourseMatrix
+  </div>
+
+  <script>
+    let adminToken = null;
+    let currentDept = "";
+    let currentSem = "";
+
+    async function adminLogin() {
+      const user = document.getElementById("admin-username").value.trim();
+      const pass = document.getElementById("admin-password").value.trim();
+      const msg = document.getElementById("admin-login-msg");
+      msg.textContent = "";
+      if (!user || !pass) { msg.textContent = "Credentials required"; msg.style.color = "red"; return; }
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const body = await res.json();
+        if (!res.ok) { msg.textContent = body.message || "Login failed"; msg.style.color = "red"; return; }
+        adminToken = body.token;
+        msg.textContent = "Logged in"; msg.style.color = "green";
+        document.getElementById("admin-login-card").style.display = "none";
+        document.getElementById("admin-main-card").style.display = "block";
+        document.getElementById("student-list").innerHTML = "<div>Select a department and semester to load students.</div>";
+      } catch (e) { msg.textContent = "Network error"; msg.style.color = "red"; }
+    }
+
+    async function loadStudents(department, semester) {
+      currentDept = department;
+      currentSem = semester;
+      const container = document.getElementById("student-list");
+      container.innerHTML = "Loading...";
+      document.getElementById("alloc-msg").textContent = "";
+      document.getElementById("multi-info").innerHTML = "";
+      /* MODIFIED: when clearing original checkboxes, dispatch a change event so grouped UI stays in sync */
+      Array.from(document.querySelectorAll("#alloc-list input")).forEach(i => { i.checked = false; i.dispatchEvent(new Event('change', { bubbles: true })); });
+      try {
+        if (!department || !semester) {
+          container.innerHTML = "<div>Please select department and semester.</div>";
+          // ADDED: hide overview when nothing selected
+          const ov = document.getElementById("curriculum-overview");
+          if (ov) ov.style.display = "none";
+          return;
+        }
+        const res = await fetch(`/api/admin/students?department=${encodeURIComponent(department)}&semester=${encodeURIComponent(semester)}`, {
+          headers: { Authorization: "Bearer " + adminToken }
+        });
+        const body = await res.json();
+        if (!res.ok) {
+          container.innerHTML = `<div style="color:red;">${body.message || "Failed to load students"}</div>`;
+          // ADDED: hide overview on error
+          const ov = document.getElementById("curriculum-overview");
+          if (ov) ov.style.display = "none";
+          return;
+        }
+        const studentsArray = Object.values(body.students || {});
+        container.innerHTML = "";
+        if (studentsArray.length === 0) {
+          container.innerHTML = "<div>No students in this department & semester.</div>";
+        } else {
+          studentsArray.forEach(s => {
+            const div = document.createElement("div");
+            div.style.padding = "4px 0";
+            div.textContent = `${s.roll} — ${s.name}`;
+            container.appendChild(div);
+          });
+        }
+        showDepartmentInfo(studentsArray.map(s => s.roll));
+
+        // ADDED: ensure grouped accordion reflects current state (highlighting handled by separate function)
+        // Scroll/expand to selected department & semester
+        highlightDeptSemInAccordion(department, semester);
+      } catch (e) {
+        container.innerHTML = "<div style='color:red;'>Network error</div>";
+        const ov = document.getElementById("curriculum-overview");
+        if (ov) ov.style.display = "none";
+      }
+    }
+
+    async function showDepartmentInfo(rolls) {
+      const info = document.getElementById("multi-info");
+      if (!rolls || rolls.length === 0) { info.innerHTML = ""; return; }
+      const sections = [];
+      for (const roll of rolls) {
+        const [allocRes, selRes] = await Promise.all([
+          fetch(`/api/allocated/${roll}`),
+          fetch(`/api/selection/${roll}`)
+        ]);
+        let allocHtml = "";
+        if (allocRes.ok) {
+          const { allocation } = await allocRes.json();
+          allocHtml = `<div><strong>Allocated:</strong> ${allocation.courses.join(", ")}</div>`;
+        } else {
+          const err = await allocRes.json().catch(() => ({ message: "None" }));
+          allocHtml = `<div><strong>Allocated:</strong> <span style="color:#a00;">${err.message}</span></div>`;
+        }
+        let selHtml = "";
+        if (selRes.ok) {
+          const { selection } = await selRes.json();
+          selHtml = `<div><strong>Submitted:</strong> ${selection.courses.join(", ")}</div>`;
+        } else {
+          const err = await selRes.json().catch(() => ({ message: "None yet" }));
+          selHtml = `<div><strong>Submitted:</strong> <span style="color:#555;">${err.message}</span></div>`;
+        }
+        sections.push(`
+          <div style="border:1px solid #ddd; padding:8px; border-radius:6px; margin-bottom:6px;">
+            <div><strong>${roll}</strong></div>
+            ${allocHtml}
+            ${selHtml}
+          </div>
+        `);
+      }
+      info.innerHTML = sections.join("");
+    }
+
+    /* ADDED: build full curriculum accordion (Department -> Semester -> Courses).
+       This scans the existing #alloc-list content and creates a grouped view.
+       It also syncs checkboxes between the grouped view and the original checkboxes.
+    */
+    function buildCurriculumAccordion() {
+      const allocList = document.getElementById('alloc-list');
+      const container = document.getElementById('curriculum-accordion');
+      if (!allocList || !container) return;
+      container.innerHTML = '';
+
+      const deptNodes = Array.from(allocList.querySelectorAll('.department'));
+      deptNodes.forEach((deptNode, deptIndex) => {
+        const deptName = (deptNode.querySelector('h3') && deptNode.querySelector('h3').textContent.trim()) || deptNode.dataset.dept || `Department ${deptIndex+1}`;
+
+        // Map semester number -> courses array
+        const semMap = {};
+        const courseLabels = Array.from(deptNode.querySelectorAll('.course-checkbox'));
+        courseLabels.forEach((lbl, idx) => {
+          const span = lbl.querySelector('span');
+          const input = lbl.querySelector('input[type="checkbox"]');
+          if (!span) return;
+          const txt = span.textContent.trim();
+
+          // Extract semester number from "(1st Sem)" etc.
+          const semMatch = txt.match(/\((\d+)(st|nd|rd|th)\s+Sem\)/i);
+          const semNum = semMatch ? parseInt(semMatch[1], 10) : 0;
+
+          // Remove trailing "(Nth Sem)" from displayed course name
+          const courseName = txt.replace(/\s*\(\d+(st|nd|rd|th)[^)]+\)\s*$/i, '').trim();
+
+          // Create unique key to link original input and grouped checkbox
+          const key = `${deptIndex}||${semNum}||${idx}`;
+          if (input) input.dataset.cmKey = key; // annotate original input
+
+          if (!semMap[semNum]) semMap[semNum] = [];
+          semMap[semNum].push({ name: courseName, orig: input, key });
+        });
+
+        // Build department card
+        const deptCard = document.createElement('div');
+        deptCard.className = 'dept-card';
+
+        const header = document.createElement('div');
+        header.className = 'dept-header';
+        header.textContent = deptName;
+
+        const chevron = document.createElement('span');
+        chevron.textContent = '+';
+        chevron.style.opacity = '0.6';
+        header.appendChild(chevron);
+
+        const body = document.createElement('div');
+        body.className = 'dept-body';
+
+        // Sort semester keys numerically (exclude 0 if present)
+        const semKeys = Object.keys(semMap).map(k => parseInt(k, 10)).filter(k => !isNaN(k)).sort((a,b) => a - b);
+
+        semKeys.forEach(semNum => {
+          if (semNum === 0) return; // skip unknown sems
+          const semDiv = document.createElement('div');
+          semDiv.className = 'semester';
+
+          const semHeader = document.createElement('div');
+          semHeader.className = 'semester-header';
+          semHeader.textContent = 'Semester ' + semNum;
+          semDiv.appendChild(semHeader);
+
+          const courseContainer = document.createElement('div');
+          courseContainer.className = 'course-list';
+
+          semMap[semNum].forEach(course => {
+            const item = document.createElement('label');
+            item.className = 'course-item';
+
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'grp-checkbox';
+            cb.dataset.cmKey = course.key;
+
+            // initialize checkbox checked state based on original input (if exists)
+            if (course.orig) cb.checked = !!course.orig.checked;
+
+            const txt = document.createElement('span');
+            txt.textContent = course.name;
+
+            item.appendChild(cb);
+            item.appendChild(txt);
+            courseContainer.appendChild(item);
+
+            // When grouped checkbox toggled, toggle original checkbox (if present)
+            cb.addEventListener('change', () => {
+              if (course.orig) {
+                course.orig.checked = cb.checked;
+                // Dispatch change event on original input so other logic (if any) reacts
+                course.orig.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            });
+
+            // When original input changes (including programmatically, if it dispatches 'change'), update grouped checkbox
+            if (course.orig) {
+              course.orig.addEventListener('change', () => {
+                cb.checked = !!course.orig.checked;
+              });
+            }
+          });
+
+          semDiv.appendChild(courseContainer);
+          body.appendChild(semDiv);
+        });
+
+        // toggle behavior for department header
+        header.addEventListener('click', () => {
+          const isOpen = body.style.display === 'block';
+          body.style.display = isOpen ? 'none' : 'block';
+          chevron.textContent = isOpen ? '+' : '−';
+        });
+
+        deptCard.appendChild(header);
+        deptCard.appendChild(body);
+        container.appendChild(deptCard);
+      });
+    }
+
+    // ADDED: helper to expand and scroll to selected dept+sem in accordion
+    function highlightDeptSemInAccordion(deptShort, sem) {
+  const container = document.getElementById('curriculum-accordion');
+  if (!container) return;
+
+  // find department card by matching original data-dept
+  const deptCards = Array.from(container.querySelectorAll('.dept-card'));
+  let matchedCard = null;
+
+  // Find index of department in #alloc-list
+  const allocDeptNodes = Array.from(document.querySelectorAll('#alloc-list .department'));
+  const deptIndex = allocDeptNodes.findIndex(d => d.dataset.dept === deptShort);
+
+  if (deptIndex !== -1 && deptCards[deptIndex]) {
+    matchedCard = deptCards[deptIndex];
+  }
+
+  if (!matchedCard) return;
+
+  // expand matched card
+  const body = matchedCard.querySelector('.dept-body');
+  const chevron = matchedCard.querySelector('.dept-header span');
+  if (body && body.style.display !== 'block') {
+    body.style.display = 'block';
+    if (chevron) chevron.textContent = '−';
+  }
+
+  // find semester header inside and scroll into view
+  const semHeader = Array.from(matchedCard.querySelectorAll('.semester-header'))
+    .find(h => h.textContent.trim().toLowerCase() === ('semester ' + sem).toLowerCase());
+
+  if (semHeader) {
+    semHeader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    semHeader.style.transition = 'background 0.4s';
+    const origBg = semHeader.style.background;
+    semHeader.style.background = '#fff5d6';
+    setTimeout(() => { semHeader.style.background = origBg; }, 800);
+  }
+}
+
+
+    // Build accordion on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      buildCurriculumAccordion();
+
+      // If someone later modifies the #alloc-list structure (unlikely), observe and rebuild
+      const allocList = document.getElementById('alloc-list');
+      if (allocList && window.MutationObserver) {
+        const mo = new MutationObserver(() => { buildCurriculumAccordion(); });
+        mo.observe(allocList, { childList: true, subtree: true });
+      }
+    });
+    // end ADDED
+
+    document.getElementById("btn-admin-login").addEventListener("click", adminLogin);
+
+    // ✅ On change of dept or semester, load students
+    document.getElementById("dept-filter").addEventListener("change", () => {
+      loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
+    });
+    document.getElementById("sem-filter").addEventListener("change", () => {
+      loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
+    });
+
+    document.getElementById("btn-allocate").addEventListener("click", async () => {
+      const msg = document.getElementById("alloc-msg"); msg.textContent = "";
+      if (!currentDept || !currentSem) { msg.textContent = "Select department and semester first"; msg.style.color = "red"; return; }
+      try {
+        const resStudents = await fetch(`/api/admin/students?department=${encodeURIComponent(currentDept)}&semester=${encodeURIComponent(currentSem)}`, {
+          headers: { Authorization: "Bearer " + adminToken }
+        });
+        const bodyStudents = await resStudents.json();
+        if (!resStudents.ok) { msg.textContent = bodyStudents.message || "Failed to get students"; msg.style.color = "red"; return; }
+        const rolls = Object.values(bodyStudents.students || {}).map(s => s.roll);
+        if (rolls.length === 0) { msg.textContent = "No students to allocate"; msg.style.color = "red"; return; }
+
+        const departmentDiv = Array.from(document.querySelectorAll("#alloc-list .department"))
+          .find(d => d.dataset.dept === currentDept);
+
+        if (!departmentDiv) { msg.textContent = "No courses found for this department"; msg.style.color = "red"; return; }
+
+        const courses = Array.from(departmentDiv.querySelectorAll("input:checked")).map(i => i.value);
+        if (courses.length === 0) { msg.textContent = "Pick at least one course"; msg.style.color = "red"; return; }
+
+        const res = await fetch("/api/admin/allocate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + adminToken },
+          body: JSON.stringify({ department: currentDept, semester: currentSem, courses })
+        });
+        const body = await res.json();
+        if (!res.ok) { msg.textContent = body.message || "Allocation failed"; msg.style.color = "red"; return; }
+        msg.textContent = `Allocated to ${rolls.length} student(s)`; msg.style.color = "green";
+        await showDepartmentInfo(rolls);
+      } catch (e) { msg.textContent = "Network error"; msg.style.color = "red"; }
+    });
+  </script>
+</body>
+</html>

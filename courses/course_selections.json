@@ -1,0 +1,69 @@
+{
+  "1023": {
+    "rollNumber": "1023",
+    "courses": [
+      "Database Systems",
+      "Artificial Intelligence"
+    ],
+    "timestamp": "2025-08-02T05:17:57.483Z"
+  },
+  "ECE13457520": {
+    "roll": "ECE13457520",
+    "courses": [
+      "Digital Electronics",
+      "Analog Electronics",
+      "Signals and Systems",
+      "Control Systems",
+      "Communication Systems"
+    ],
+    "submittedAt": "2025-08-04T11:56:14.462Z"
+  },
+  "CSE64729397": {
+    "roll": "CSE64729397",
+    "courses": [
+      "Database Systems",
+      "Operating Systems"
+    ],
+    "submittedAt": "2025-08-02T05:45:50.669Z"
+  },
+  "CSE21446159": {
+    "roll": "CSE21446159",
+    "courses": [
+      "Database Systems",
+      "Operating Systems",
+      "Software Engineering",
+      "Data Structures & Algorithms"
+    ],
+    "submittedAt": "2025-08-03T14:19:13.397Z"
+  },
+  "ME75309887": {
+    "roll": "ME75309887",
+    "courses": [
+      "Artificial Intelligence",
+      "Software Engineering"
+    ],
+    "submittedAt": "2025-08-02T14:51:57.944Z"
+  },
+  "CSE32713641": {
+    "roll": "CSE32713641",
+    "courses": [
+      "Operating Systems",
+      "Software Engineering",
+      "Computer Architecture",
+      "Cyber Security",
+      "Artificial Intelligence",
+      "Data Structures & Algorithms"
+    ],
+    "submittedAt": "2025-08-05T15:52:05.443Z"
+  },
+  "ECE83782478": {
+    "roll": "ECE83782478",
+    "courses": [
+      "Control Systems",
+      "Digital Electronics",
+      "Analog Electronics",
+      "Microprocessors and Microcontrollers"
+    ],
+    "submittedAt": "2025-08-06T04:40:31.708Z"
+  }
+}

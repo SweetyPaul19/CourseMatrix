@@ -1,0 +1,76 @@
+{
+  "ECE13457520": {
+    "roll": "ECE13457520",
+    "courses": [
+      "Digital Electronics",
+      "Analog Electronics",
+      "Control Systems",
+      "Microprocessors and Microcontrollers"
+    ],
+    "allocatedAt": "2025-08-06T04:40:06.967Z"
+  },
+  "CSE64729397": {
+    "roll": "CSE64729397",
+    "courses": [
+      "Operating Systems",
+      "Artificial Intelligence",
+      "Software Engineering",
+      "Data Structures & Algorithms",
+      "Computer Architecture",
+      "Cyber Security"
+    ],
+    "allocatedAt": "2025-08-05T15:46:58.781Z"
+  },
+  "CSE21446159": {
+    "roll": "CSE21446159",
+    "courses": [
+      "Operating Systems",
+      "Artificial Intelligence",
+      "Software Engineering",
+      "Data Structures & Algorithms",
+      "Computer Architecture",
+      "Cyber Security"
+    ],
+    "allocatedAt": "2025-08-05T15:46:58.781Z"
+  },
+  "ME75309887": {
+    "roll": "ME75309887",
+    "courses": [
+      "Artificial Intelligence",
+      "Networking"
+    ],
+    "allocatedAt": "2025-08-02T14:58:06.204Z"
+  },
+  "ECE64992916": {
+    "roll": "ECE64992916",
+    "courses": [
+      "Digital Electronics",
+      "Analog Electronics",
+      "Control Systems",
+      "Microprocessors and Microcontrollers"
+    ],
+    "allocatedAt": "2025-08-06T04:40:06.967Z"
+  },
+  "CSE32713641": {
+    "roll": "CSE32713641",
+    "courses": [
+      "Operating Systems",
+      "Artificial Intelligence",
+      "Software Engineering",
+      "Data Structures & Algorithms",
+      "Computer Architecture",
+      "Cyber Security"
+    ],
+    "allocatedAt": "2025-08-05T15:46:58.781Z"
+  },
+  "ECE83782478": {
+    "roll": "ECE83782478",
+    "courses": [
+      "Digital Electronics",
+      "Analog Electronics",
+      "Control Systems",
+      "Microprocessors and Microcontrollers"
+    ],
+    "allocatedAt": "2025-08-06T04:40:06.967Z"
+  }
+}

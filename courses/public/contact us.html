@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - CourseMatrix</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #0d47a1;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    nav a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a.active, nav a:hover {
+      color: #ffeb3b;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #0d47a1;
+      font-size: 22px;
+    }
+    .card p, .card ul, .card div {
+      font-size: 16px;
+      color: #444;
+    }
+
+    .card a {
+      color: #0d47a1;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    form label {
+      font-weight: 600;
+      display: block;
+      margin-top: 12px;
+      color: #333;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    form textarea {
+      resize: vertical;
+    }
+    form button {
+      margin-top: 15px;
+      background: #0d47a1;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    form button:hover {
+      background: #1565c0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 350px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #f5f5f5;
+      border-top: 1px solid #ddd;
+      margin-top: 40px;
+    }
+    footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CourseMatrix</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact Us</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Get in Touch</h2>
+      <p>
+        Have questions, feedback, or need support? Reach out to us — we’d love to hear from you!
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Contact Information</h2>
+      <div style="line-height: 1.8; font-size: 16px;">
+        <p>📧 <strong>Email:</strong> 
+          <a href="mailto:support@coursematrix.com">support@coursematrix.com</a>
+        </p>
+        <p>📞 <strong>Phone:</strong> 
+          <a href="tel:+919876543210">+91 98765 43210</a>
+        </p>
+        <p>📍 <strong>Address:</strong> CourseMatrix HQ,<br>Tech Park, Kolkata, India</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Our Location</h2>
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3683.125725930016!2d88.36389531536178!3d22.57264648517921!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277a08f445a2d%3A0x6df9c6cf72b9c62!2sKolkata%20Tech%20Park!5e0!3m2!1sen!2sin!4v1671623456789!5m2!1sen!2sin" 
+        allowfullscreen="" 
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="card">
+      <h2>Send Us a Message</h2>
+      <form>
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 CourseMatrix. All rights reserved.</p>
+  </footer>
+</body>
+</html>

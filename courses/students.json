@@ -1,0 +1,51 @@
+{
+  "CSE21446159": {
+    "roll": "CSE21446159",
+    "name": "Anisha Sinha",
+    "email": "sinhaannie21@gmail.com",
+    "department": "CSE",
+    "createdAt": "2025-08-02T05:32:16.159Z"
+  },
+  "ECE13457520": {
+    "roll": "ECE13457520",
+    "name": "Sneha Das",
+    "email": "sndas@gmail.com",
+    "department": "ECE",
+    "createdAt": "2025-08-02T05:37:47.520Z"
+  },
+  "CSE64729397": {
+    "roll": "CSE64729397",
+    "name": "Taniya Dutta",
+    "email": "tanidutta26@gmail.com",
+    "department": "CSE",
+    "createdAt": "2025-08-02T05:45:09.397Z"
+  },
+  "ME75309887": {
+    "roll": "ME75309887",
+    "name": "Rohan Banerjee",
+    "email": "rbanerjee03h@gmail.com",
+    "department": "ME",
+    "createdAt": "2025-08-02T14:50:09.887Z"
+  },
+  "ECE64992916": {
+    "roll": "ECE64992916",
+    "name": "Rita Ghosh",
+    "email": "rghosh6@gmail.com",
+    "department": "ECE",
+    "createdAt": "2025-08-03T14:30:02.916Z"
+  },
+  "CSE32713641": {
+    "roll": "CSE32713641",
+    "name": "anirban",
+    "email": "abc@gmail.com",
+    "department": "CSE",
+    "createdAt": "2025-08-05T15:42:23.641Z"
+  },
+  "ECE83782478": {
+    "roll": "ECE83782478",
+    "name": "subham sinha",
+    "email": "subham@gmail.com",
+    "department": "ECE",
+    "createdAt": "2025-08-06T04:39:22.478Z"
+  }
+}
