@@ -1,5 +1,13 @@
+// ─────────────────────────────────────────────────────────────
+// Frontend JS for Course Matrix
+// ─────────────────────────────────────────────────────────────
+
+const BACKEND_URL = "https://coursematrix.onrender.com"; // Render backend URL
 let currentRoll = null;
 
+// ─────────────────────────────────────────────────────────────
+// Student Registration
+// ─────────────────────────────────────────────────────────────
 async function registerStudent() {
   const name = document.getElementById("reg-name").value.trim();
   const email = document.getElementById("reg-email").value.trim();
@@ -15,7 +23,7 @@ async function registerStudent() {
   }
 
   try {
-    const res = await fetch("/api/register", {
+    const res = await fetch(`${BACKEND_URL}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, department, semester }),
@@ -37,6 +45,9 @@ async function registerStudent() {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// Student Login
+// ─────────────────────────────────────────────────────────────
 async function loginStudent() {
   const roll = document.getElementById("login-roll").value.trim();
   const msg = document.getElementById("login-msg");
@@ -47,7 +58,7 @@ async function loginStudent() {
     return;
   }
   try {
-    const res = await fetch("/api/login", {
+    const res = await fetch(`${BACKEND_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ roll }),
@@ -68,6 +79,9 @@ async function loginStudent() {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// Render Registration Form
+// ─────────────────────────────────────────────────────────────
 function renderRegistrationForm() {
   const area = document.getElementById("auth-area");
   area.innerHTML = `
@@ -104,6 +118,9 @@ function renderRegistrationForm() {
   document.getElementById("btn-register")?.addEventListener("click", registerStudent);
 }
 
+// ─────────────────────────────────────────────────────────────
+// Render Login Form
+// ─────────────────────────────────────────────────────────────
 function renderLoginForm() {
   const area = document.getElementById("auth-area");
   area.innerHTML = `
@@ -121,6 +138,9 @@ function renderLoginForm() {
   document.getElementById("btn-login")?.addEventListener("click", loginStudent);
 }
 
+// ─────────────────────────────────────────────────────────────
+// Create Course Selection Modal
+// ─────────────────────────────────────────────────────────────
 function createSelectionModal(allocated, previousSelection) {
   const root = document.getElementById("modal-root");
   root.innerHTML = "";
@@ -187,7 +207,7 @@ function createSelectionModal(allocated, previousSelection) {
     saveBtn.disabled = true;
     saveBtn.textContent = "Saving...";
     try {
-      const res = await fetch("/api/select-courses", {
+      const res = await fetch(`${BACKEND_URL}/api/select-courses`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -210,20 +230,23 @@ function createSelectionModal(allocated, previousSelection) {
   });
 }
 
+// ─────────────────────────────────────────────────────────────
+// Open Course Selection Modal
+// ─────────────────────────────────────────────────────────────
 async function openSelectCourses() {
   if (!currentRoll) {
     alert("Register or login first to select courses.");
     return;
   }
   try {
-    const allocRes = await fetch(`/api/allocated/${currentRoll}`);
+    const allocRes = await fetch(`${BACKEND_URL}/api/allocated/${currentRoll}`);
     const allocBody = await allocRes.json();
     if (!allocRes.ok) {
       alert(allocBody.message || "No allocated courses yet. Contact admin.");
       return;
     }
     let prevSel = null;
-    const selRes = await fetch(`/api/selection/${currentRoll}`);
+    const selRes = await fetch(`${BACKEND_URL}/api/selection/${currentRoll}`);
     if (selRes.ok) {
       prevSel = await selRes.json();
       prevSel = prevSel.selection;
@@ -234,10 +257,9 @@ async function openSelectCourses() {
   }
 }
 
-document.getElementById("show-registration")?.addEventListener("click", () => {
-  renderRegistrationForm();
-});
-document.getElementById("show-login")?.addEventListener("click", () => {
-  renderLoginForm();
-});
+// ─────────────────────────────────────────────────────────────
+// Event Listeners for Auth Buttons
+// ─────────────────────────────────────────────────────────────
+document.getElementById("show-registration")?.addEventListener("click", renderRegistrationForm);
+document.getElementById("show-login")?.addEventListener("click", renderLoginForm);
 document.getElementById("select-courses-trigger")?.addEventListener("click", openSelectCourses);
