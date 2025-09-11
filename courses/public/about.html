@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About - CourseMatrix</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #0d47a1;
+      padding: 18px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0.5px;
+    }
+
+    nav a {
+      margin: 0 14px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    nav a.active, nav a:hover {
+      color: #ffeb3b;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #0d47a1;
+      font-size: 22px;
+      border-left: 4px solid #ffeb3b;
+      padding-left: 10px;
+    }
+    .card p, .card ul {
+      font-size: 16px;
+      color: #444;
+      margin: 0;
+    }
+
+    .card ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+    .card ul li {
+      margin: 8px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 22px;
+      background: #f5f5f5;
+      border-top: 1px solid #ddd;
+      margin-top: 50px;
+    }
+    footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CourseMatrix</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Who We Are</h2>
+      <p>
+        <strong>CourseMatrix</strong> is a modern platform built to simplify the 
+        student course allotment and registration process. By merging innovative 
+        technology with efficient education management, we deliver a seamless, 
+        user-friendly experience for both administrators and students.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Our Mission</h2>
+      <p>
+        We aim to eliminate paperwork and confusion in course registration by 
+        providing a centralized, secure, and transparent digital solution that 
+        empowers institutions of every size to manage education effectively.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Key Features</h2>
+      <ul>
+        <li>🔹 Student Registration with automatic roll number generation</li>
+        <li>🔹 Secure Admin Panel with authentication</li>
+        <li>🔹 Automated Course Allocation system</li>
+        <li>🔹 Easy and transparent Course Selection for students</li>
+        <li>🔹 Efficient, paperless education management</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 CourseMatrix. All rights reserved.</p>
+  </footer>
+</body>
+</html>

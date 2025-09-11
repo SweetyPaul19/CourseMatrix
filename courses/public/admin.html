@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - CourseMatrix</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .department {
+      margin-bottom: 20px;
+    }
+    .department h3 {
+      margin-bottom: 5px;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    .courses {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .courses label {
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .course-checkbox input {
+      margin-right: 4px;
+    }
+
+    #curriculum-overview {
+      border: 1px solid #e6eef8;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(30,40,60,0.04);
+    }
+    #curriculum-overview h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.15em;
+    }
+    #curriculum-overview ul { margin: 6px 0 0 18px; padding: 0; }
+    #curriculum-overview li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo"><div class="brand">CourseMatrix Admin</div></div>
+    <div class="nav">
+      <button class="nav-btn" onclick="location.href='index.html'">Home</button>
+    </div>
+  </div>
+
+  <div class="container" style="max-width:950px;">
+    <!-- Admin login -->
+    <div class="card" id="admin-login-card">
+      <h2>Admin Login</h2>
+      <div class="row">
+        <input id="admin-username" placeholder="Username" />
+        <input id="admin-password" placeholder="Password" type="password" />
+      </div>
+      <button class="small-btn" id="btn-admin-login">Login</button>
+      <div id="admin-login-msg" class="feedback"></div>
+    </div>
+
+    <!-- Allocation UI -->
+    <div class="card" id="admin-main-card" style="display:none;">
+      <h2>Allocate Courses to Students</h2>
+
+      <!-- Department selection -->
+      <div class="field">
+        <label for="dept-filter">Select Department</label>
+        <select id="dept-filter">
+          <option value="">-- Choose department --</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="ME">ME</option>
+          <option value="CE">CE</option>
+        </select>
+      </div>
+
+      <!-- Semester selection -->
+      <div class="field">
+        <label for="sem-filter">Select Semester</label>
+        <select id="sem-filter">
+          <option value="">-- Choose semester --</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+        </select>
+      </div>
+
+      <!-- Student List -->
+      <div class="field">
+        <p style="margin:0;font-weight:600;">Students in Department & Semester</p>
+        <div id="student-list" style="max-height:260px;overflow:auto; padding:8px; border:1px solid #ddd; border-radius:6px;">
+        </div>
+      </div>
+
+      <!-- Curriculum Overview -->
+      <div id="curriculum-overview" style="display:none;">
+        <h3>Curriculum Overview</h3>
+        <ul id="curriculum-list"></ul>
+      </div>
+
+      <!-- Courses to Allocate -->
+      <div class="field" style="display:none;">
+        <p style="margin:0;font-weight:600;">Courses to Allocate</p>
+        <div id="alloc-list"></div>
+      </div>
+
+      <button class="btn" id="btn-allocate">Allocate Courses</button>
+      <div id="alloc-msg" class="feedback"></div>
+      <div id="multi-info" style="margin-top:20px;"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Admin Panel — CourseMatrix
+  </div>
+
+<script>
+  const curriculum = {
+    CSE: {
+      "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Basic Electrical Engineering","Computer Programming","Engineering Mechanics"],
+      "2": ["Engineering Mathematics II","Engineering Drawing","Data Structures","Digital Logic Design","Basic Electronics","Environmental Science"],
+      "3": ["Discrete Mathematics","Computer Organization & Architecture","Data Structures & Algorithms","Object-Oriented Programming","Software Engineering"],
+      "4": ["Operating Systems","Database Management Systems","Computer Networks","Theory of Computation","Software Lab"],
+      "5": ["Compiler Design","Artificial Intelligence","Web Technologies","Computer Graphics","Database Lab"],
+      "6": ["Machine Learning","Cloud Computing","Cybersecurity","Mobile App Development","Mini Project Lab"],
+      "7": ["Data Mining & Warehousing","Internet of Things (IoT)","Elective I","Project Work I"],
+      "8": ["Elective II","Project Work II","Seminar","Internship/Training"]
+    },
+    ECE: {
+      "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Basic Electrical Engineering","Computer Programming","Engineering Mechanics"],
+      "2": ["Engineering Mathematics II","Engineering Drawing","Digital Logic Design","Basic Electronics","Electronic Devices & Circuits","Environmental Science"],
+      "3": ["Signals and Systems","Analog Communication","Microprocessors & Microcontrollers","Electromagnetic Theory","Linear Integrated Circuits"],
+      "4": ["Digital Communication","Control Systems","Microcontroller Programming","Analog VLSI Design"],
+      "5": ["Digital Signal Processing","Wireless Communication","Embedded Systems","Communication Lab"],
+      "6": ["VLSI Design","Optical Communication","Mobile Communication","Advanced Microprocessors"],
+      "7": ["Radar & Satellite Communication","Elective I","Project Work I"],
+      "8": ["Elective II","Project Work II","Seminar","Internship/Training"]
+    },
+    ME: {
+      "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Engineering Mechanics","Basic Electrical Engineering","Computer Programming"],
+      "2": ["Engineering Mathematics II","Engineering Drawing","Engineering Materials","Thermodynamics I","Basic Mechanical Engineering"],
+      "3": ["Strength of Materials","Manufacturing Processes","Fluid Mechanics I","Machine Drawing","Mechanical Measurements I"],
+      "4": ["Thermodynamics II","Theory of Machines","Fluid Mechanics II","Dynamics of Machines"],
+      "5": ["Heat Transfer","Design of Machine Elements I","IC Engines","Mechanical Measurements II"],
+      "6": ["Machine Design","Refrigeration and Air Conditioning","Computer Aided Design","Industrial Engineering"],
+      "7": ["Operations Research","Mechatronics","Project Work I"],
+      "8": ["Project Work II","Seminar","Elective I","Elective II"]
+    },
+    CE: {
+      "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Engineering Mechanics","Basic Electrical Engineering","Computer Programming"],
+      "2": ["Engineering Mathematics II","Engineering Drawing","Surveying I","Engineering Materials","Basic Civil Engineering"],
+      "3": ["Strength of Materials","Fluid Mechanics","Surveying II","Concrete Technology","Structural Analysis I"],
+      "4": ["Geotechnical Engineering I","Structural Analysis II","Transportation Engineering I","Hydraulics","Environmental Engineering I"],
+      "5": ["Geotechnical Engineering II","Design of Concrete Structures I","Hydrology and Water Resources Engineering","Transportation Engineering II"],
+      "6": ["Design of Concrete Structures II","Design of Steel Structures","Environmental Engineering II","Construction Planning and Management"],
+      "7": ["Advanced Structural Design","Hydraulic Structures","Elective I","Project Work I"],
+      "8": ["Elective II","Project Work II","Seminar","Internship/Training"]
+    }
+  };
+
+  let adminToken = null;
+  let currentDept = "";
+  let currentSem = "";
+
+  async function adminLogin() {
+    const user = document.getElementById("admin-username").value.trim();
+    const pass = document.getElementById("admin-password").value.trim();
+    const msg = document.getElementById("admin-login-msg");
+    msg.textContent = "";
+    if (!user || !pass) { msg.textContent = "Credentials required"; msg.style.color = "red"; return; }
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username: user, password: pass })
+      });
+      const body = await res.json();
+      if (!res.ok) { msg.textContent = body.message || "Login failed"; msg.style.color = "red"; return; }
+      adminToken = body.token;
+      msg.textContent = "Logged in"; msg.style.color = "green";
+      document.getElementById("admin-login-card").style.display = "none";
+      document.getElementById("admin-main-card").style.display = "block";
+      document.getElementById("student-list").innerHTML = "<div>Select a department and semester to load students.</div>";
+    } catch (e) { msg.textContent = "Network error"; msg.style.color = "red"; }
+  }
+
+  async function loadStudents(department, semester) {
+    currentDept = department;
+    currentSem = semester;
+    const container = document.getElementById("student-list");
+    container.innerHTML = "Loading...";
+    document.getElementById("alloc-msg").textContent = "";
+    document.getElementById("multi-info").innerHTML = "";
+    document.getElementById("curriculum-overview").style.display = "none";
+    document.getElementById("alloc-list").parentElement.style.display = "none";
+
+    if (!department || !semester) {
+      container.innerHTML = "<div>Please select department and semester.</div>";
+      return;
+    }
+
+    // Display curriculum overview
+    const currList = document.getElementById("curriculum-list");
+    currList.innerHTML = "";
+    if (curriculum[department] && curriculum[department][semester]) {
+      curriculum[department][semester].forEach(c => {
+        const li = document.createElement("li");
+        li.textContent = c;
+        currList.appendChild(li);
+      });
+      document.getElementById("curriculum-overview").style.display = "block";
+    }
+
+    // Generate dynamic checkboxes
+    const allocDiv = document.getElementById("alloc-list");
+    allocDiv.innerHTML = "";
+    curriculum[department][semester].forEach(course => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="checkbox" value="${course}"> ${course}`;
+      allocDiv.appendChild(label);
+      allocDiv.appendChild(document.createElement("br"));
+    });
+    allocDiv.parentElement.style.display = "block";
+
+    try {
+      const res = await fetch(`/api/admin/students?department=${encodeURIComponent(department)}&semester=${encodeURIComponent(semester)}`, {
+        headers: { Authorization: "Bearer " + adminToken }
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        container.innerHTML = `<div style="color:red;">${body.message || "Failed to load students"}</div>`;
+        return;
+      }
+      const studentsArray = Object.values(body.students || {});
+      container.innerHTML = "";
+      if (studentsArray.length === 0) {
+        container.innerHTML = "<div>No students in this department & semester.</div>";
+      } else {
+        studentsArray.forEach(s => {
+          const div = document.createElement("div");
+          div.style.padding = "4px 0";
+          div.textContent = `${s.roll} — ${s.name}`;
+          container.appendChild(div);
+        });
+      }
+      await showDepartmentInfo(studentsArray.map(s => s.roll));
+    } catch (e) {
+      container.innerHTML = "<div style='color:red;'>Network error</div>";
+    }
+  }
+
+  async function showDepartmentInfo(rolls) {
+    const info = document.getElementById("multi-info");
+    if (!rolls || rolls.length === 0) { info.innerHTML = ""; return; }
+    const sections = [];
+    for (const roll of rolls) {
+      try {
+        const [allocRes, selRes] = await Promise.all([
+          fetch(`/api/allocated/${roll}`),
+          fetch(`/api/selection/${roll}`)
+        ]);
+        const allocData = allocRes.ok ? (await allocRes.json()).allocation.courses.join(", ") : "None";
+        const selData = selRes.ok ? (await selRes.json()).selection.courses.join(", ") : "None yet";
+        sections.push(`<div style="border:1px solid #ddd; padding:8px; border-radius:6px; margin-bottom:6px;">
+                        <div><strong>${roll}</strong></div>
+                        <div><strong>Allocated:</strong> ${allocData}</div>
+                        <div><strong>Submitted:</strong> ${selData}</div>
+                      </div>`);
+      } catch (e) { sections.push(`<div><strong>${roll}</strong> - Error loading data</div>`); }
+    }
+    info.innerHTML = sections.join("");
+  }
+
+  document.getElementById("btn-admin-login").addEventListener("click", adminLogin);
+  document.getElementById("dept-filter").addEventListener("change", () => {
+    loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
+  });
+  document.getElementById("sem-filter").addEventListener("change", () => {
+    loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
+  });
+
+  document.getElementById("btn-allocate").addEventListener("click", async () => {
+    const msg = document.getElementById("alloc-msg"); msg.textContent = "";
+    if (!currentDept || !currentSem) { msg.textContent = "Select department and semester first"; msg.style.color = "red"; return; }
+
+    const courses = Array.from(document.querySelectorAll("#alloc-list input:checked")).map(i => i.value);
+    if (courses.length === 0) { msg.textContent = "Pick at least one course"; msg.style.color = "red"; return; }
+
+    try {
+      const resStudents = await fetch(`/api/admin/students?department=${encodeURIComponent(currentDept)}&semester=${encodeURIComponent(currentSem)}`, {
+        headers: { Authorization: "Bearer " + adminToken }
+      });
+      const bodyStudents = await resStudents.json();
+      if (!resStudents.ok) { msg.textContent = bodyStudents.message || "Failed to get students"; msg.style.color = "red"; return; }
+      const rolls = Object.values(bodyStudents.students || {}).map(s => s.roll);
+      if (rolls.length === 0) { msg.textContent = "No students to allocate"; msg.style.color = "red"; return; }
+
+      const res = await fetch("/api/admin/allocate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + adminToken },
+        body: JSON.stringify({ department: currentDept, semester: currentSem, courses })
+      });
+      const body = await res.json();
+      if (!res.ok) { msg.textContent = body.message || "Allocation failed"; msg.style.color = "red"; return; }
+      msg.textContent = `Allocated to ${rolls.length} student(s)`; msg.style.color = "green";
+      await showDepartmentInfo(rolls);
+    } catch (e) { msg.textContent = "Network error"; msg.style.color = "red"; }
+  });
+</script>
+</body>
+</html>
