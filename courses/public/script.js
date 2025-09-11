@@ -263,3 +263,4 @@ async function openSelectCourses() {
 document.getElementById("show-registration")?.addEventListener("click", renderRegistrationForm);
 document.getElementById("show-login")?.addEventListener("click", renderLoginForm);
 document.getElementById("select-courses-trigger")?.addEventListener("click", openSelectCourses);
+
