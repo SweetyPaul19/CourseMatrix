@@ -2,7 +2,7 @@
 // Frontend JS for Course Matrix
 // ─────────────────────────────────────────────────────────────
 
-const BACKEND_URL = "https://coursematrix.onrender.com"; // Render backend URL
+const BACKEND_URL = "https://coursematrix.onrender.com/"; // Render backend URL
 let currentRoll = null;
 
 // ─────────────────────────────────────────────────────────────
@@ -263,4 +263,5 @@ async function openSelectCourses() {
 document.getElementById("show-registration")?.addEventListener("click", renderRegistrationForm);
 document.getElementById("show-login")?.addEventListener("click", renderLoginForm);
 document.getElementById("select-courses-trigger")?.addEventListener("click", openSelectCourses);
+
 
