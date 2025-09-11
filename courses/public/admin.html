@@ -181,7 +181,7 @@
     msg.textContent = "";
     if (!user || !pass) { msg.textContent = "Credentials required"; msg.style.color = "red"; return; }
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ username: user, password: pass })
@@ -321,3 +321,4 @@
 </script>
 </body>
 </html>
+
