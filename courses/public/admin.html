@@ -127,6 +127,11 @@
   </div>
 
 <script>
+  // 🌐 API base depending on environment
+const API_BASE =
+  window.location.hostname.includes("localhost")
+    ? "http://localhost:3000" // local dev
+    : "https://coursematrix.onrender.com"; // backend on Render
   const curriculum = {
     CSE: {
       "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Basic Electrical Engineering","Computer Programming","Engineering Mechanics"],
@@ -321,4 +326,5 @@
 </script>
 </body>
 </html>
+
 
