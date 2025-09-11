@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 // 🌐 CORS Setup (allow frontend on Vercel to connect)
 // ─────────────────────────────────────────────────────────────
 const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3000", // frontend url in .env
+  process.env.FRONTEND_URL,"http://localhost:3000", // frontend url in .env
 ];
 
 app.use(
@@ -284,4 +284,5 @@ app.get("/api/selection/:roll", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+
 
