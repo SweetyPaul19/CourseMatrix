@@ -5,6 +5,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const Student = require("./models/Student");
 const Allocation = require("./models/Allocation");
 const Selection = require("./models/Selection");
@@ -13,6 +14,21 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ─────────────────────────────────────────────────────────────
+// 🌐 CORS Setup (allow frontend on Vercel to connect)
+// ─────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3000", // frontend url in .env
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.static("public"));
