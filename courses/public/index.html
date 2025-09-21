@@ -1,46 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CourseMatrix</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f4f7fb;
+      color: #222;
+    }
+    /* Navbar */
+    nav {
+      background: #0a2a55;
+      padding: 15px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    nav .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav ul li {
+      display: inline;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    nav ul li a:hover {
+      background: #1a4a88;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin: 80px auto;
+      max-width: 800px;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      padding: 60px 40px;
+      border-radius: 20px;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .buttons a {
+      text-decoration: none;
+      padding: 12px 24px;
+      background: #fff;
+      color: #2a5298;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+    .buttons a:hover {
+      background: #2a5298;
+      color: #fff;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #0a2a55;
+      color: #bbb;
+      margin-top: 80px;
+    }
+  </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo"><div class="brand">CourseMatrix</div></div>
-    <div class="nav">
-      <button class="nav-btn" onclick="location.href='courses.html'">Courses</button>
-      <button class="nav-btn" onclick="location.href='about.html'">About</button>
-      <button class="nav-btn" onclick="location.href='contact us.html'">Contact Us</button>
-      <!-- <button class="nav-btn" onclick="alert('Courses')">Courses</button> -->
-      <!-- <button class="nav-btn" onclick="alert('About')">About</button>
-      <button class="nav-btn" onclick="alert('Contact Us')">Contact Us</button> -->
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">CourseMatrix</div>
+    <ul>
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to <span style="color:#ffd700;">CourseMatrix</span></h1>
+    <p>Your trusted platform for student course allotment and registration</p>
+    <div class="buttons">
+      <a href="#">Student Registration</a>
+      <a href="#">Student Login</a>
+      <a href="#">Admin Panel</a>
     </div>
-  </div>
+  </section>
 
-  <div class="container">
-    <div class="hero">
-      <h1>Welcome to <span class="highlight">CourseMatrix</span></h1>
-      <p>Your trusted platform for student course allotment and registration</p>
-      <div class="actions">
-        <button class="btn" id="show-registration">Student Registration</button>
-        <button class="btn" id="show-login">Student Login</button>
-        <button class="btn" id="select-courses-trigger" style="display:none;">Select Courses</button>
-        <button class="btn" onclick="location.href='admin.html'">Admin Panel</button>
-      </div>
-    </div>
+  <!-- Footer -->
+  <footer>
+    © 2025 CourseMatrix — All Rights Reserved
+  </footer>
 
-    <!-- dynamic auth UI will be injected here -->
-    <div id="auth-area" style="max-width: 920px; margin: 32px auto; padding:0 12px;"></div>
-  </div>
-
-  <div id="modal-root" style="display:none;"></div>
-
-  <script src="script.js"></script>
-
-  <div class="footer">
-    CourseMatrix — simple course selection interface
-  </div>
 </body>
 </html>
