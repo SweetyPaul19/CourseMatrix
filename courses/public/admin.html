@@ -6,41 +6,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .department {
-      margin-bottom: 20px;
-    }
-    .department h3 {
-      margin-bottom: 5px;
-      font-size: 1.1em;
-      font-weight: 600;
-    }
-    .courses {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .courses label {
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .course-checkbox input {
-      margin-right: 4px;
-    }
-
+    .department { margin-bottom: 20px; }
+    .department h3 { margin-bottom: 5px; font-size: 1.1em; font-weight: 600; }
+    .courses { display: flex; flex-wrap: wrap; gap: 15px; }
+    .courses label { white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+    .course-checkbox input { margin-right: 4px; }
+    
     #curriculum-overview {
-      border: 1px solid #e6eef8;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 16px;
-      background: #ffffff;
-      box-shadow: 0 1px 4px rgba(30,40,60,0.04);
+      border: 1px solid #e6eef8; border-radius: 8px; padding: 12px; margin-bottom: 16px;
+      background: #ffffff; box-shadow: 0 1px 4px rgba(30,40,60,0.04);
     }
-    #curriculum-overview h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.15em;
-    }
+    #curriculum-overview h3 { margin: 0 0 8px 0; font-size: 1.15em; }
     #curriculum-overview ul { margin: 6px 0 0 18px; padding: 0; }
     #curriculum-overview li { margin-bottom: 4px; }
   </style>
@@ -54,7 +30,6 @@
   </div>
 
   <div class="container" style="max-width:950px;">
-    <!-- Admin login -->
     <div class="card" id="admin-login-card">
       <h2>Admin Login</h2>
       <div class="row">
@@ -65,11 +40,9 @@
       <div id="admin-login-msg" class="feedback"></div>
     </div>
 
-    <!-- Allocation UI -->
     <div class="card" id="admin-main-card" style="display:none;">
       <h2>Allocate Courses to Students</h2>
 
-      <!-- Department selection -->
       <div class="field">
         <label for="dept-filter">Select Department</label>
         <select id="dept-filter">
@@ -81,7 +54,6 @@
         </select>
       </div>
 
-      <!-- Semester selection -->
       <div class="field">
         <label for="sem-filter">Select Semester</label>
         <select id="sem-filter">
@@ -97,20 +69,17 @@
         </select>
       </div>
 
-      <!-- Student List -->
       <div class="field">
         <p style="margin:0;font-weight:600;">Students in Department & Semester</p>
         <div id="student-list" style="max-height:260px;overflow:auto; padding:8px; border:1px solid #ddd; border-radius:6px;">
         </div>
       </div>
 
-      <!-- Curriculum Overview -->
       <div id="curriculum-overview" style="display:none;">
         <h3>Curriculum Overview</h3>
         <ul id="curriculum-list"></ul>
       </div>
 
-      <!-- Courses to Allocate -->
       <div class="field" style="display:none;">
         <p style="margin:0;font-weight:600;">Courses to Allocate</p>
         <div id="alloc-list"></div>
@@ -128,10 +97,11 @@
 
 <script>
   // 🌐 API base depending on environment
-const API_BASE =
-  window.location.hostname.includes("localhost")
-    ? "http://localhost:3000" // local dev
-    : "https://coursematrix.onrender.com"; // backend on Render
+  const API_BASE =
+    window.location.hostname.includes("localhost")
+      ? "http://localhost:3000" // local dev
+      : "https://coursematrix.onrender.com"; // backend on Render
+
   const curriculum = {
     CSE: {
       "1": ["Engineering Mathematics I","Engineering Physics","Engineering Chemistry","Basic Electrical Engineering","Computer Programming","Engineering Mechanics"],
@@ -186,6 +156,7 @@ const API_BASE =
     msg.textContent = "";
     if (!user || !pass) { msg.textContent = "Credentials required"; msg.style.color = "red"; return; }
     try {
+      // ✅ FIX: Use API_BASE
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -231,16 +202,19 @@ const API_BASE =
     // Generate dynamic checkboxes
     const allocDiv = document.getElementById("alloc-list");
     allocDiv.innerHTML = "";
-    curriculum[department][semester].forEach(course => {
-      const label = document.createElement("label");
-      label.innerHTML = `<input type="checkbox" value="${course}"> ${course}`;
-      allocDiv.appendChild(label);
-      allocDiv.appendChild(document.createElement("br"));
-    });
-    allocDiv.parentElement.style.display = "block";
+    if (curriculum[department] && curriculum[department][semester]) {
+      curriculum[department][semester].forEach(course => {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" value="${course}"> ${course}`;
+        allocDiv.appendChild(label);
+        allocDiv.appendChild(document.createElement("br"));
+      });
+      allocDiv.parentElement.style.display = "block";
+    }
 
     try {
-      const res = await fetch(`/api/admin/students?department=${encodeURIComponent(department)}&semester=${encodeURIComponent(semester)}`, {
+      // ✅ FIX: Use API_BASE
+      const res = await fetch(`${API_BASE}/api/admin/students?department=${encodeURIComponent(department)}&semester=${encodeURIComponent(semester)}`, {
         headers: { Authorization: "Bearer " + adminToken }
       });
       const body = await res.json();
@@ -248,7 +222,9 @@ const API_BASE =
         container.innerHTML = `<div style="color:red;">${body.message || "Failed to load students"}</div>`;
         return;
       }
-      const studentsArray = Object.values(body.students || {});
+      // Handle response structure carefully
+      const studentsArray = body.students || [];
+      
       container.innerHTML = "";
       if (studentsArray.length === 0) {
         container.innerHTML = "<div>No students in this department & semester.</div>";
@@ -262,6 +238,7 @@ const API_BASE =
       }
       await showDepartmentInfo(studentsArray.map(s => s.roll));
     } catch (e) {
+      console.error(e);
       container.innerHTML = "<div style='color:red;'>Network error</div>";
     }
   }
@@ -272,12 +249,24 @@ const API_BASE =
     const sections = [];
     for (const roll of rolls) {
       try {
+        // ✅ FIX: Use API_BASE for both requests
         const [allocRes, selRes] = await Promise.all([
-          fetch(`/api/allocated/${roll}`),
-          fetch(`/api/selection/${roll}`)
+          fetch(`${API_BASE}/api/allocated/${roll}`),
+          fetch(`${API_BASE}/api/selection/${roll}`)
         ]);
-        const allocData = allocRes.ok ? (await allocRes.json()).allocation.courses.join(", ") : "None";
-        const selData = selRes.ok ? (await selRes.json()).selection.courses.join(", ") : "None yet";
+        
+        let allocData = "None";
+        if (allocRes.ok) {
+           const body = await allocRes.json();
+           if(body.allocation && body.allocation.courses) allocData = body.allocation.courses.join(", ");
+        }
+
+        let selData = "None yet";
+        if (selRes.ok) {
+           const body = await selRes.json();
+           if(body.selection && body.selection.courses) selData = body.selection.courses.join(", ");
+        }
+
         sections.push(`<div style="border:1px solid #ddd; padding:8px; border-radius:6px; margin-bottom:6px;">
                         <div><strong>${roll}</strong></div>
                         <div><strong>Allocated:</strong> ${allocData}</div>
@@ -289,9 +278,11 @@ const API_BASE =
   }
 
   document.getElementById("btn-admin-login").addEventListener("click", adminLogin);
+  
   document.getElementById("dept-filter").addEventListener("change", () => {
     loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
   });
+  
   document.getElementById("sem-filter").addEventListener("change", () => {
     loadStudents(document.getElementById("dept-filter").value.trim(), document.getElementById("sem-filter").value.trim());
   });
@@ -304,27 +295,32 @@ const API_BASE =
     if (courses.length === 0) { msg.textContent = "Pick at least one course"; msg.style.color = "red"; return; }
 
     try {
-      const resStudents = await fetch(`/api/admin/students?department=${encodeURIComponent(currentDept)}&semester=${encodeURIComponent(currentSem)}`, {
+      // ✅ FIX: Use API_BASE to fetch students again to get updated rolls
+      const resStudents = await fetch(`${API_BASE}/api/admin/students?department=${encodeURIComponent(currentDept)}&semester=${encodeURIComponent(currentSem)}`, {
         headers: { Authorization: "Bearer " + adminToken }
       });
       const bodyStudents = await resStudents.json();
       if (!resStudents.ok) { msg.textContent = bodyStudents.message || "Failed to get students"; msg.style.color = "red"; return; }
-      const rolls = Object.values(bodyStudents.students || {}).map(s => s.roll);
+      
+      const rolls = (bodyStudents.students || []).map(s => s.roll);
       if (rolls.length === 0) { msg.textContent = "No students to allocate"; msg.style.color = "red"; return; }
 
-      const res = await fetch("/api/admin/allocate", {
+      // ✅ FIX: Use API_BASE for allocation
+      const res = await fetch(`${API_BASE}/api/admin/allocate`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + adminToken },
         body: JSON.stringify({ department: currentDept, semester: currentSem, courses })
       });
       const body = await res.json();
       if (!res.ok) { msg.textContent = body.message || "Allocation failed"; msg.style.color = "red"; return; }
+      
       msg.textContent = `Allocated to ${rolls.length} student(s)`; msg.style.color = "green";
       await showDepartmentInfo(rolls);
-    } catch (e) { msg.textContent = "Network error"; msg.style.color = "red"; }
+    } catch (e) { 
+      console.error(e);
+      msg.textContent = "Network error"; msg.style.color = "red"; 
+    }
   });
 </script>
 </body>
 </html>
-
-
