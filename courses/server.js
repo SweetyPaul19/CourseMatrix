@@ -50,8 +50,8 @@ mongoose
 // 🔐 Admin Session Logic
 // ─────────────────────────────────────────────────────────────
 const adminSessions = {};
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "password123";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const ADMIN_TOKEN_TTL_MS = 1000 * 60 * 60; // 1 hour
 
 function adminAuth(req, res, next) {
