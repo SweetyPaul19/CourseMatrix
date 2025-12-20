@@ -129,7 +129,3 @@ Contributions are what make the open-source community such an amazing place to l
 Project Link: [https://course-matrix-taupe.vercel.app/](https://course-matrix-taupe.vercel.app/)
 
 ---
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Made_with-Love-ff69b4?style=for-the-badge&logo=appveyor" alt="Made with Love">
-</p>
