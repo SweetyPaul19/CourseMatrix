@@ -1,8 +1,7 @@
 # CourseMatrix 🎓
 
-![License](https://img.shields.io/github/license/SweetyPaul19/CourseMatrix?style=flat-square)
-![Issues](https://img.shields.io/github/issues/SweetyPaul19/CourseMatrix?style=flat-square)
-![Stars](https://img.shields.io/github/stars/SweetyPaul19/CourseMatrix?style=flat-square)
+![HTML + CSS + JS](https://img.shields.io/badge/Frontend-HTML5%20%2B%20Vanilla_CSS%20%2B%20Vanilla_JS-61DAFB) ![Node.js + Express.js](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express.js-000000) ![MongoDB](https://img.shields.io/badge/Database-MongoDB-FFCA28)
+![GitHub Repo stars](https://img.shields.io/github/stars/SweetyPaul19/CourseMatrix?style=social)
 
 > **Streamline your academic planning and course management.** > _[Optional: Insert a short, catchy slogan about your project here]_
 
