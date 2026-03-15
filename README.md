@@ -4,7 +4,7 @@
 ![Issues](https://img.shields.io/github/issues/SweetyPaul19/CourseMatrix?style=flat-square)
 ![Stars](https://img.shields.io/github/stars/SweetyPaul19/CourseMatrix?style=flat-square)
 
-> **Streamline your academic planning and course management.** > _[Optional: Insert a short, catchy slogan about your project here]_
+> **Streamline your academic planning and course management.** >
 
 ---
 
