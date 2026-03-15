@@ -39,8 +39,6 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 * **📅 Dynamic Scheduling:** Automatically detect conflicts and optimize timetables.
 * **📊 Visualization:** Interactive matrix view of course loads and prerequisites.
 * **🔍 Search & Filter:** Quickly find courses by department, instructor, or time slot.
-* **💾 Export Options:** Download schedules as PDF, CSV, or iCal formats.
-* **[Feature Name]:** [Brief description of another feature].
 
 ---
 
@@ -62,8 +60,6 @@ Follow these instructions to set up the project locally on your machine.
 ### Prerequisites
 
 Ensure you have the following installed:
-* [e.g., Node.js v14+]
-* [Any other dependency]
 
 ### Installation
 
