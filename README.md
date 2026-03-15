@@ -31,7 +31,6 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 **Why CourseMatrix?**
 * Simplifies complex scheduling data.
 * Provides a clean, intuitive interface for users.
-* [Add another main benefit here].
 
 ---
 
