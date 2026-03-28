@@ -46,10 +46,10 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 
 This project was built using the following technologies:
 
-* **Frontend:** [e.g., HTML,CSS,JS]
-* **Backend:** [e.g., Node.js, Express.js]
-* **Database:** [e.g., MongoDB]
-* **Tools:** [e.g., GitHub, VS Code]
+* **Frontend:** [HTML,CSS,JS]
+* **Backend:** [Node.js, Express.js]
+* **Database:** [MongoDB]
+* **Tools:** [GitHub, VS Code]
 
 ---
 
