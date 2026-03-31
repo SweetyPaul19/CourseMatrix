@@ -38,7 +38,9 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 
 - 📝 Student Registration 
 - 🔢 Automatic Roll Number Generation 
-- 📋 View All Students  
+- 📋 View All Students
+- 📚 Course Assignment
+ 
 ---
 
 ## 🛠 Tech Stack
