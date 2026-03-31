@@ -36,7 +36,7 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 
 ## ✨ Key Features
 
-* **📅 Dynamic Scheduling:** Automatically detect conflicts and optimize timetables.
+- 📝 Student Registration 
 * **📊 Visualization:** Interactive matrix view of course loads and prerequisites.
 * **🔍 Search & Filter:** Quickly find courses by department, instructor, or time slot.
 
