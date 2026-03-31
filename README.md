@@ -41,6 +41,7 @@ Whether you are trying to resolve scheduling conflicts, plan your semester, or t
 - 📋 View All Students
 - 📚 Course Assignment
 - 🔍 View Student Course Details
+- 🖥️ User-friendly Interface
  
 ---
 
